@@ -1,0 +1,46 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract PassMarks {
+
+    uint[10] public passMarks; // Fixed size array for 10 students
+    uint public count = 0;     // Counter for how many marks stored
+
+    event MarkAdded(uint mark);
+    event MaxReached();
+
+    // Function to add a passing mark (>40)
+    function addMark(uint mark) public {
+        // Simulate do-while: we always try to insert at least once
+        bool inserted = false;
+        while(!inserted) {
+            if (mark > 40) {
+                require(count < 10, "Array full: maximum 10 marks allowed");
+                passMarks[count] = mark;
+                count++;
+                inserted = true;
+                emit MarkAdded(mark);
+
+                // Optional: if array reaches full capacity
+                if(count == 10) {
+                    emit MaxReached();
+                }
+
+            } else {
+                // If mark is <=40, reject
+                inserted = true; // Exit loop without adding
+            }
+        }
+    }
+
+    // Function to view all stored passing marks
+    function getPassMarks() public view returns (uint[10] memory) {
+        return passMarks;
+    }
+
+    // Fallback function
+    fallback() external payable {}
+
+    // Receive function
+    receive() external payable {}
+}

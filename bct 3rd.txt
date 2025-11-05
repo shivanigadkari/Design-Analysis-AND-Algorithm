@@ -1,0 +1,44 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract BankAccount {
+
+    // Mapping to store balance of each customer (address)
+    mapping(address => uint256) private balances;
+
+    // Event to log transactions
+    event Deposited(address indexed account, uint256 amount);
+    event Withdrawn(address indexed account, uint256 amount);
+
+    // Deposit function: allows user to deposit Ether into their account
+    function deposit() public payable {
+        require(msg.value > 0, "Deposit amount must be greater than 0");
+        balances[msg.sender] += msg.value;
+        emit Deposited(msg.sender, msg.value);
+    }
+
+    // Withdraw function: allows user to withdraw their Ether
+    function withdraw(uint256 amount) public {
+        require(amount <= balances[msg.sender], "Insufficient balance");
+        payable(msg.sender).transfer(amount);
+        balances[msg.sender] -= amount;
+        emit Withdrawn(msg.sender, amount);
+    }
+
+    // Show balance function: returns balance of the caller
+    function getBalance() public view returns (uint256) {
+        return balances[msg.sender];
+    }
+
+    // Fallback function to handle unexpected Ether transfers
+    fallback() external payable {
+        balances[msg.sender] += msg.value;
+        emit Deposited(msg.sender, msg.value);
+    }
+
+    // Receive function to handle direct Ether transfer
+    receive() external payable {
+        balances[msg.sender] += msg.value;
+        emit Deposited(msg.sender, msg.value);
+    }
+}

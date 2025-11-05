@@ -1,0 +1,43 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract EmployeeDetails {
+
+    // Structure to hold employee information
+    struct Employee {
+        uint id;
+        string name;
+        uint salary;
+        string joiningDate;
+    }
+
+    // Dynamic array to store multiple employees
+    Employee[] public employees;
+
+    // Event to log when an employee is added
+    event EmployeeAdded(uint id, string name, uint salary, string joiningDate);
+
+    // Function to add a new employee
+    function addEmployee(uint _id, string memory _name, uint _salary, string memory _joiningDate) public {
+        employees.push(Employee(_id, _name, _salary, _joiningDate));
+        emit EmployeeAdded(_id, _name, _salary, _joiningDate);
+    }
+
+    // Function to get the total number of employees
+    function getEmployeeCount() public view returns (uint) {
+        return employees.length;
+    }
+
+    // Function to get details of an employee by index
+    function getEmployee(uint index) public view returns (uint, string memory, uint, string memory) {
+        require(index < employees.length, "Invalid employee index");
+        Employee memory e = employees[index];
+        return (e.id, e.name, e.salary, e.joiningDate);
+    }
+
+    // Fallback function
+    fallback() external payable {}
+
+    // Receive function
+    receive() external payable {}
+}

@@ -1,0 +1,50 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract ArithmeticOperations {
+
+    uint public result;
+
+    // Function for Addition
+    function add(uint a, uint b) public returns (uint) {
+        result = a + b;
+        return result;
+    }
+
+    // Function for Subtraction
+    function subtract(uint a, uint b) public returns (uint) {
+        require(a >= b, "Result would be negative");
+        result = a - b;
+        return result;
+    }
+
+    // Function for Multiplication
+    function multiply(uint a, uint b) public returns (uint) {
+        result = a * b;
+        return result;
+    }
+
+    // Function for Division
+    function divide(uint a, uint b) public returns (uint) {
+        require(b != 0, "Division by zero not allowed");
+        result = a / b;
+        return result;
+    }
+
+    // Function to view the last computed result
+    function getResult() public view returns (uint) {
+        return result;
+    }
+
+    // Fallback function – called when a non-existent function is invoked
+    fallback() external payable {
+        // For demonstration, just store a value when fallback triggers
+        result = 999;
+    }
+
+    // Receive function – called when Ether is sent directly to the contract
+    receive() external payable {
+        // For demonstration, store a special value when Ether is received
+        result = 111;
+    }
+}
